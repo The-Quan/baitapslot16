@@ -55,8 +55,8 @@
         %>
         <tr>
             <td><%= product.getProduct_id() %></td>
-            <td><%= product.getDescription() %></td>
             <td><%= product.getProduct_name() %></td>
+            <td><%= product.getDescription() %></td>
             <td><%= product.getPrice() %></td>
             <td>
                 <button class="btn btn-warning btn-sm ">Update</button>
