@@ -42,4 +42,29 @@ public class UserController extends HttpServlet {
         query.execute();
         entityManager.getTransaction().commit();
     }
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        var username = req.getParameter("username");
+        var email = req.getParameter("email");
+        var phone = req.getParameter("phone");
+        var address = req.getParameter("address");
+        entityManager.getTransaction().begin();
+        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("createUser");
+
+        query.registerStoredProcedureParameter("username", String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("email", String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("phone", String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("address", String.class, ParameterMode.IN);
+
+        query.setParameter("username", username);
+        query.setParameter("email", email);
+        query.setParameter("phone", phone);
+        query.setParameter("address", address);
+
+        query.execute();
+        entityManager.getTransaction().commit();
+        var users = entityManager.createStoredProcedureQuery("getUsersAll", Users.class).getResultList();
+        req.setAttribute("users", users);
+        req.getRequestDispatcher("/views/users/Index.jsp").forward(req, resp);
+    }
 }

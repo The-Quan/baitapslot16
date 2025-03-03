@@ -19,22 +19,22 @@
 <body>
 <div style="padding: 30px 100px">
     <h1 class="mb-4">Add User</h1>
-    <form method="post" action="classroom" class="mb-4">
+    <form method="post" action="users" class="mb-4">
         <div class="form-group">
             <label>UserName</label>
             <input class="form-control" type="text" name="username" required>
         </div>
         <div class="form-group">
             <label>Email</label>
-            <input class="form-control" type="number" name="email" required>
+            <input class="form-control" type="text" name="email" required>
         </div>
         <div class="form-group">
             <label>Phone</label>
-            <input class="form-control" type="number" name="phone" required>
+            <input class="form-control" type="text" name="phone" required>
         </div>
         <div class="form-group">
             <label>Address</label>
-            <input class="form-control" type="number" name="address" required>
+            <input class="form-control" type="text" name="address" required>
         </div>
         <button class="btn btn-primary btn-sm" type="submit">Save</button>
         <button class="btn btn-secondary btn-sm" type="reset">Cancel</button>
@@ -87,7 +87,7 @@
     <jsp:include page="../../includes/footer.jsp"/>
 </footer>
 <script>
-    function deleteClass(id) {
+    function deleteUser(id) {
         if (confirm("Bạn có chắc muốn xóa User học này không?")) {
             fetch('/bt_slot16_war_exploded/users?id=' + id, { method: 'DELETE' })
                 .then(response => {

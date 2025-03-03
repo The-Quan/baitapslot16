@@ -19,14 +19,18 @@
 <body>
 <div style="padding: 30px 100px">
     <h1 class="mb-4">Add Product</h1>
-    <form method="post" action="classroom" class="mb-4">
+    <form method="post" action="products" class="mb-4">
         <div class="form-group">
-            <label>Class Name</label>
-            <input class="form-control" type="text" name="name_class" required>
+            <label>Product Name</label>
+            <input class="form-control" type="text" name="product_name" required>
         </div>
         <div class="form-group">
-            <label>Members Number</label>
-            <input class="form-control" type="number" name="number_member" required>
+            <label>Description</label>
+            <input class="form-control" type="text" name="description" required>
+        </div>
+        <div class="form-group">
+            <label>Price</label>
+            <input class="form-control" type="number" name="price" required>
         </div>
         <button class="btn btn-primary btn-sm" type="submit">Save</button>
         <button class="btn btn-secondary btn-sm" type="reset">Cancel</button>
@@ -39,6 +43,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Description</th>
+            <th>Price</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -51,10 +56,11 @@
         <tr>
             <td><%= product.getProduct_id() %></td>
             <td><%= product.getProduct_name() %></td>
-            <td><%= product.getDescription() %></td>
+            <td><%= product.getProduct_name() %></td>
+            <td><%= product.getPrice() %></td>
             <td>
                 <button class="btn btn-warning btn-sm ">Update</button>
-                <button class="btn btn-danger btn-sm">Delete</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteProduct(<%= product.getProduct_id()%>)">Delete</button>
             </td>
         </tr>
         <%
@@ -74,6 +80,22 @@
 <footer>
     <jsp:include page="../../includes/footer.jsp"/>
 </footer>
+<script>
+    function deleteProduct(id) {
+        if (confirm("Bạn có chắc muốn xóa Product học này không?")) {
+            fetch('/bt_slot16_war_exploded/products?id=' + id, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Xóa thành công!");
+                        location.reload();
+                    } else {
+                        response.json().then(data => alert("Xóa thất bại: " + data.error));
+                    }
+                })
+                .catch(error => console.error('Lỗi:', error));
+        }
+    }
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
