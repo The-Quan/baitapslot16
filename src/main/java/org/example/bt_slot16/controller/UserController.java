@@ -1,5 +1,6 @@
 package org.example.bt_slot16.controller;
 
+import com.google.gson.Gson;
 import jakarta.persistence.*;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -66,5 +67,45 @@ public class UserController extends HttpServlet {
         var users = entityManager.createStoredProcedureQuery("getUsersAll", Users.class).getResultList();
         req.setAttribute("users", users);
         req.getRequestDispatcher("/views/users/Index.jsp").forward(req, resp);
+    }
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Gson gson = new Gson();
+        Users users = gson.fromJson(req.getReader(), Users.class);
+
+        int id = users.getUser_id();
+        String newName = users.getUsername();
+        String email = users.getEmail();
+        String phone = users.getPhone();
+        String address = users.getAddress();
+
+        System.out.println(id + newName + email + phone + address);
+
+        if (!entityManager.getTransaction().isActive()) {
+            entityManager.getTransaction().begin();
+        }
+        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("updateUser");
+
+        query.registerStoredProcedureParameter("id", Integer.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("new_username", String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("new_email", String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("new_phone", String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("new_address", String.class, ParameterMode.IN);
+
+        query.setParameter("id", id);
+        query.setParameter("new_username", newName);
+        query.setParameter("new_email", email);
+        query.setParameter("new_phone", phone);
+        query.setParameter("new_address", address);
+
+        query.execute();
+        entityManager.getTransaction().commit();
+
+        Users updatedUser = entityManager.find(Users.class, id);
+
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().write(gson.toJson(updatedUser));
     }
 }

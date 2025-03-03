@@ -1,5 +1,6 @@
 package org.example.bt_slot16.controller;
 
+import com.google.gson.Gson;
 import jakarta.persistence.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -62,5 +63,34 @@ public class ProductController extends HttpServlet {
         req.setAttribute("products", products);
         req.getRequestDispatcher("/views/products/Index.jsp").forward(req, resp);
     }
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Gson gson = new Gson();
+        Products products = gson.fromJson(req.getReader(), Products.class);
 
+        int id = products.getProduct_id();
+        String productName = products.getProduct_name();
+        String description = products.getDescription();
+        Double price = products.getPrice();
+
+        System.out.println(id + productName + description + price);
+
+        if (!entityManager.getTransaction().isActive()) {
+            entityManager.getTransaction().begin();
+        }
+        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("updateProduct");
+
+        query.registerStoredProcedureParameter("id", Integer.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("new_product_name", String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("new_description", String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter("new_price", Double.class, ParameterMode.IN);
+
+        query.setParameter("id", id);
+        query.setParameter("new_product_name", productName);
+        query.setParameter("new_description", description);
+        query.setParameter("new_price", price);
+
+        query.execute();
+        entityManager.getTransaction().commit();
+    }
 }

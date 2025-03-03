@@ -34,6 +34,33 @@
         <button class="btn btn-secondary btn-sm" type="reset">Cancel</button>
     </form>
 </div>
+<div class="modal fade" id="editOrderModal" tabindex="-1" aria-labelledby="editOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editOrderModalLabel">Edit User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editOrderForm">
+                    <input type="hidden" id="editOrderId" name="order_id">
+                    <div class="form-group">
+                        <label>User Id</label>
+                        <input class="form-control" type="number" id="editUserId" name="user_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Product Id</label>
+                        <input class="form-control" type="number" id="editProductId" name="product_id" required>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Save Changes</button>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <div style="padding: 30px 100px">
     <table class="table table-striped">
         <thead class="thead-dark">
@@ -65,7 +92,7 @@
             <td><%= order.getProduct_name() %></td>
             <td><%= order.getPrice() %></td>
             <td>
-                <button class="btn btn-warning btn-sm ">Update</button>
+                <button class="btn btn-warning btn-sm " onclick="editOrder(<%= order.getOrder_id() %>, '<%= order.getUser_id() %>', '<%= order.getProduct_id() %>')">Update</button>
                 <button class="btn btn-danger btn-sm" onclick="deleteOrder(<%= order.getOrder_id()%>)">Delete</button>
             </td>
         </tr>
@@ -86,6 +113,37 @@
 <footer>
     <jsp:include page="../../includes/footer.jsp"/>
 </footer>
+<script>
+    function editOrder(id, userId, productId) {
+        document.getElementById("editOrderId").value = id;
+        document.getElementById("editUserId").value = userId;
+        document.getElementById("editProductId").value = productId;
+        $('#editOrderModal').modal('show');
+    }
+
+    document.getElementById("editOrderForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        let orderId = document.getElementById("editOrderId").value;
+        let userId = document.getElementById("editUserId").value;
+        let productId = document.getElementById("editProductId").value;
+
+        fetch('/bt_slot16_war_exploded/orders', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order_id: orderId, user_id: userId,  product_id: productId})
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("Cập nhật thành công!");
+                    location.reload();
+                } else {
+                    alert("Cập nhật thất bại!");
+                }
+            })
+            .catch(error => console.error("Lỗi:", error));
+    });
+</script>
 <script>
     function deleteOrder(id) {
         if (confirm("Bạn có chắc muốn xóa Product học này không?")) {

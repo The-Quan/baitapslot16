@@ -36,6 +36,37 @@
         <button class="btn btn-secondary btn-sm" type="reset">Cancel</button>
     </form>
 </div>
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProductModalLabel">Edit User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editProductForm">
+                    <input type="hidden" id="editProductId" name="product_id">
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input class="form-control" type="text" id="editProductName" name="product_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input class="form-control" type="text" id="editDescription" name="description" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input class="form-control" type="number" id="editPrice" name="price" required>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Save Changes</button>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <div style="padding: 30px 100px">
     <table class="table table-striped">
         <thead class="thead-dark">
@@ -59,7 +90,7 @@
             <td><%= product.getDescription() %></td>
             <td><%= product.getPrice() %></td>
             <td>
-                <button class="btn btn-warning btn-sm ">Update</button>
+                <button class="btn btn-warning btn-sm " onclick="editProduct(<%= product.getProduct_id() %>, '<%= product.getProduct_name() %>', '<%= product.getDescription() %>', '<%= product.getPrice() %>')"> Update</button>
                 <button class="btn btn-danger btn-sm" onclick="deleteProduct(<%= product.getProduct_id()%>)">Delete</button>
             </td>
         </tr>
@@ -80,6 +111,39 @@
 <footer>
     <jsp:include page="../../includes/footer.jsp"/>
 </footer>
+<script>
+    function editProduct(id, productName, description, price) {
+        document.getElementById("editProductId").value = id;
+        document.getElementById("editProductName").value = productName;
+        document.getElementById("editDescription").value = description;
+        document.getElementById("editPrice").value = price;
+        $('#editProductModal').modal('show');
+    }
+
+    document.getElementById("editProductForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        let productId = document.getElementById("editProductId").value;
+        let product_name = document.getElementById("editProductName").value;
+        let description = document.getElementById("editDescription").value;
+        let price = document.getElementById("editPrice").value;
+
+        fetch('/bt_slot16_war_exploded/products', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ product_id: productId, product_name, description, price })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("Cập nhật thành công!");
+                    location.reload();
+                } else {
+                    alert("Cập nhật thất bại!");
+                }
+            })
+            .catch(error => console.error("Lỗi:", error));
+    });
+</script>
 <script>
     function deleteProduct(id) {
         if (confirm("Bạn có chắc muốn xóa Product học này không?")) {
