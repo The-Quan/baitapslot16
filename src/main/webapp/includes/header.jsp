@@ -11,6 +11,14 @@
     <title>Title</title>
 </head>
 <body>
+<div class="card text-center">
+    <div class="card-body">
+        <blockquote class="blockquote mb-0">
+            <p>"Lamborghini – not just a car, but a statement of power and prestige."</p>
+            <footer class="blockquote-footer">Luxury Car Enthusiast in <cite title="Auto World">Auto World</cite></footer>
+        </blockquote>
+    </div>
+</div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Navbar</a>
@@ -30,9 +38,6 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="orders">Order</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
                 </li>
             </ul>
         </div>

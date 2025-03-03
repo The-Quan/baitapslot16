@@ -9,7 +9,6 @@
     <jsp:include page="includes/header.jsp" />
 </header>
 <body>
-<h1>Lamborghini</h1>
 <div style="width: 100%; display: flex; align-items: center; justify-content: center ">
     <div style="padding: 30px 100px">
         <img src="./static/anh-o-to-40.jpg" alt="Banner Car" />
