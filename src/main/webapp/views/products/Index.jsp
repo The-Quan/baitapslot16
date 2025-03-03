@@ -55,7 +55,7 @@
         %>
         <tr>
             <td><%= product.getProduct_id() %></td>
-            <td><%= product.getProduct_name() %></td>
+            <td><%= product.getDescription() %></td>
             <td><%= product.getProduct_name() %></td>
             <td><%= product.getPrice() %></td>
             <td>
